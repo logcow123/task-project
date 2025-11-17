@@ -39,3 +39,7 @@ extension Task {
         }
     }
 }
+
+extension Task{
+    static var exampleTask = Task(title: "Example Task", description: "This is an example task.")
+}

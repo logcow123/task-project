@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct TaskDetailView: View {
-    @ObservedObject var viewModel: TaskViewModel
+    @Binding var task: Task
     @Binding var isPresented: Popup
-    var task: Task
+
     @State private var title: String
     @State private var description: String
-    
-    init(task: Task, viewModel: TaskViewModel, isPresented: Binding<Popup>) {
-        self.viewModel = viewModel
-        self._isPresented = isPresented
-        self.task = task
-        _title = State(initialValue: task.title)
-        _description = State(initialValue: task.description)
+
+    init(task: Binding<Task>, isPresented: Binding<Popup>) {
+        _task = task
+        _isPresented = isPresented
+        
+        _title = State(initialValue: task.wrappedValue.title)
+        _description = State(initialValue: task.wrappedValue.description)
     }
     
     var body: some View {
@@ -44,10 +44,21 @@ struct TaskDetailView: View {
                 .background(.white)
                 .foregroundColor(.black)
             HStack{
+                Button(){
+                    isPresented = .noPopup
+                }label: {
+                    Text("Cancel")
+                }.foregroundColor(Color(.white))
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .padding(.horizontal, 23)
+                    .padding(.vertical, 10)
+                 .background(Capsule().fill(.red))
+                 .shadow(radius: 2)
                 Spacer()
                 Button(){
-                    viewModel.changeTaskTitle(for: task, to: title)
-                    viewModel.changeTaskDescription(for: task, to: description)
+                    task.title = title
+                    task.description = description
                     isPresented = .noPopup
                 }label: {
                     Text("Save")
@@ -65,8 +76,7 @@ struct TaskDetailView: View {
 }
 
 #Preview {
-    @Previewable @StateObject var viewModel = TaskViewModel()
     @Previewable @State var isPresented: Popup = .detailTask
-    let task = viewModel.tasks[1]
-    TaskDetailView(task: task, viewModel: viewModel, isPresented: $isPresented)
+    @Previewable @State var task = Task.exampleTask
+    TaskDetailView(task: $task, isPresented: $isPresented)
 }

@@ -9,6 +9,22 @@ import SwiftUI
 
 class TaskViewModel: ObservableObject {
     @Published var tasks: [Task] = TaskViewModel.sampleTasks // Change Later
+    @Published var currentId: UUID? = nil
+    
+    var selectedTaskBinding: Binding<Task>? {
+        guard let id = currentId else { return nil }
+        
+        return Binding<Task>(
+            get: {
+                self.tasks.first(where: {$0.id == id})!
+            },
+            set: { updatedTask in
+                if let index = self.tasks.firstIndex(where: { $0.id == id }) {
+                    self.tasks[index] = updatedTask
+                }
+            }
+        )
+    }
     
     func addTask(title: String, description: String) {
         guard !title.isEmpty else { return }

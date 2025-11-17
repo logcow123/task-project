@@ -10,7 +10,6 @@ import SwiftUI
 struct TaskListView: View {
     @StateObject var viewModel = TaskViewModel()
     @State var hasPopup: Popup = .noPopup
-    @State var popupTask: Task?
     
     var body: some View {
         ZStack {
@@ -25,7 +24,7 @@ struct TaskListView: View {
                         ForEach(viewModel.tasks){ task in
                             TaskCardView(viewModel: viewModel, taskId: task.id)
                                 .onTapGesture {
-                                    popupTask = task
+                                    viewModel.currentId = task.id
                                     hasPopup = .detailTask
                                 }
                         }.navigationTitle(Text("Tasks"))
@@ -46,8 +45,8 @@ struct TaskListView: View {
                 case .addTask:
                     PopupView(content: TaskAddView(viewModel: viewModel, isPresented: $hasPopup))
                 case .detailTask:
-                    if let task = popupTask{
-                        PopupView(content: TaskDetailView(task: task, viewModel: viewModel, isPresented: $hasPopup))
+                if let task = viewModel.selectedTaskBinding{
+                        PopupView(content: TaskDetailView(task: task, isPresented: $hasPopup))
                     }else{
                         EmptyView()
                     }
