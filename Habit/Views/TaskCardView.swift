@@ -10,6 +10,7 @@ import SwiftUI
 struct TaskCardView: View {
     @StateObject var viewModel: TaskViewModel
     var taskId: UUID
+    
     var body: some View {
         if let task = viewModel.tasks.first(where: {$0.id == taskId}){
             HStack {

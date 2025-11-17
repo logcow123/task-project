@@ -137,7 +137,7 @@ struct CalendarView: View {
   }
 }
 #Preview {
-    CalendarView2(
+    CalendarView(
           startHour: 5,
           endHour: 23,
           calendarHeight: 1200,
