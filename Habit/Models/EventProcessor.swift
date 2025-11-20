@@ -26,9 +26,9 @@ struct EventProcessor{
                 }
                 currentEvents = [event]
             }
-            if !currentEvents.isEmpty{
-                processedEvents.append(currentEvents)
-            }
+        }
+        if !currentEvents.isEmpty{
+            processedEvents.append(currentEvents)
         }
         
         return processedEvents
