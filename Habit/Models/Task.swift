@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct Task: Identifiable, Hashable{
-    let id = UUID()
+struct Task: Identifiable, Hashable, Codable {
+    var id: UUID = UUID()
     var title: String
     var description: String
     var isComplete: Bool = false
@@ -17,11 +17,15 @@ struct Task: Identifiable, Hashable{
     var status: Status = .unmarked
     var startTime: Date = Date()
     var endTime: Date = Date()
-    
-    enum Status{
-        case complete
-        case missed
-        case unmarked
+
+    enum Status: String, Codable {
+        case complete, missed, unmarked
+    }
+
+    mutating func setStatus(_ newStatus: Status) {
+        status = newStatus
+        isComplete = newStatus != .unmarked
+        theme = newStatus == .unmarked ? .gold : .main
     }
 }
 
@@ -78,6 +82,6 @@ extension Date {
   static func from(_ dateString: String, format: String = "yyyy-MM-dd HH:mm") -> Date {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = format
-    return dateFormatter.date(from: dateString)!
+    return dateFormatter.date(from: dateString) ?? Date()
   }
 }
