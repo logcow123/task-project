@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct TaskListView: View {
-    @StateObject var viewModel = TaskViewModel()
-    @State var hasPopup: Popup = .noPopup
+    @EnvironmentObject var viewModel: AppViewModel
+    @State private var hasPopup: Popup = .noPopup
     
     var body: some View {
         ZStack {
@@ -22,14 +22,14 @@ struct TaskListView: View {
                 ScrollView {
                     VStack(alignment: .leading){
                         ForEach(viewModel.tasks){ task in
-                            TaskCardView(viewModel: viewModel, taskId: task.id)
+                            TaskCardView(taskId: task.id)
                                 .onTapGesture {
-                                    viewModel.currentId = task.id
+                                    viewModel.selectedID = task.id
                                     hasPopup = .detailTask
                                 }
-                        }.navigationTitle(Text("Tasks"))
+                        }
                     }
-                }
+                }.navigationTitle(Text("Tasks"))
                 Button(action: {
                     hasPopup = .addTask
                 }, label: {
@@ -43,7 +43,7 @@ struct TaskListView: View {
                 case .noPopup:
                     EmptyView()
                 case .addTask:
-                    PopupView(content: TaskAddView(viewModel: viewModel, isPresented: $hasPopup))
+                    PopupView(content: TaskAddView(isPresented: $hasPopup))
                 case .detailTask:
                 if let task = viewModel.selectedTaskBinding{
                         PopupView(content: TaskDetailView(task: task, isPresented: $hasPopup))
@@ -57,5 +57,8 @@ struct TaskListView: View {
 }
 
 #Preview {
+    let viewModel = AppViewModel()
+    
     TaskListView()
+        .environmentObject(viewModel)
 }

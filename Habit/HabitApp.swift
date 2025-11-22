@@ -11,8 +11,10 @@ import SwiftUI
 struct HabitApp: App {
     
     var body: some Scene {
+        @StateObject var viewModel = AppViewModel()
         WindowGroup {
             TaskListView()
+                .environmentObject(viewModel)
         }
     }
 }

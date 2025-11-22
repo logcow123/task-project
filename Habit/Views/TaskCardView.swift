@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TaskCardView: View {
-    @StateObject var viewModel: TaskViewModel
+    @EnvironmentObject var viewModel: AppViewModel
     var taskId: UUID
     
     var body: some View {
@@ -28,21 +28,27 @@ struct TaskCardView: View {
                 Spacer()
                 Menu{
                     Button(action:{
-                        viewModel.markTaskAsComplete(for: task)
+                        viewModel.update(task.id){
+                            $0.setStatus(.complete)
+                        }
                     }){
                         Text("Task Complete")
                         Image(systemName: "checkmark.circle")
                             .foregroundColor(.green)
                     }
                     Button(action:{
-                        viewModel.markTaskAsMissed(for: task)
+                        viewModel.update(task.id){
+                            $0.setStatus(.missed)
+                        }
                     }){
                         Text("Task Missed")
                         Image(systemName: "x.circle")
                             .foregroundColor(.red)
                     }
                     Button(action: {
-                        viewModel.markTaskAsIncomplete(for: task)
+                        viewModel.update(task.id){
+                            $0.setStatus(.unmarked)
+                        }
                     }){
                         Text("Task Incomplete")
                         Image(systemName: "circle")
@@ -65,9 +71,11 @@ struct TaskCardView: View {
     }
 }
 
-#Preview (traits: .fixedLayout(width: 400, height: 60)){
-    let viewModel = TaskViewModel()
+#Preview (traits: .fixedLayout(width: 400, height: 60)) {
+    let viewModel = AppViewModel()
     let task = viewModel.tasks.first!
-    TaskCardView(viewModel: viewModel, taskId: task.id)
+    
+    TaskCardView(taskId: task.id)
+        .environmentObject(viewModel)  // ← REQUIRED
 }
 

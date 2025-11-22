@@ -29,7 +29,8 @@ struct PopupView<Content: View>: View {
 
 #Preview {
     @Previewable @State var hasPopup: Popup = .addTask
-    let viewModel = TaskViewModel()
-    let addView = TaskAddView(viewModel: viewModel, isPresented: $hasPopup)
+    let viewModel = AppViewModel()
+    let addView = TaskAddView(isPresented: $hasPopup)
+        .environmentObject(viewModel)
     PopupView(content: addView)
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TaskAddView: View {
-    @ObservedObject var viewModel: TaskViewModel
+    @EnvironmentObject var viewModel: AppViewModel
     @State private var title: String = ""
     @State private var description: String = ""
     @Binding var isPresented: Popup
@@ -32,7 +32,8 @@ struct TaskAddView: View {
                 .border(.black, width: 2)
                 .lineLimit(5, reservesSpace: true)
             Button(action: {
-                viewModel.addTask(title: title, description: description)
+                let myTask = Task(title: title, description: description)
+                viewModel.addTask(task: myTask)
                 isPresented = .noPopup
             }, label: {
                 Text("Create")
@@ -48,6 +49,7 @@ struct TaskAddView: View {
 }
 #Preview{
     @Previewable @State var hasPopup: Popup = .addTask
-    let viewModel = TaskViewModel()
-    TaskAddView(viewModel: viewModel, isPresented: $hasPopup)
+    let viewModel = AppViewModel()
+    TaskAddView(isPresented: $hasPopup)
+        .environmentObject(viewModel)
 }

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class AppViewModel: ObservableObject{
-    @Published var tasks: [Task] = []
+    @Published var tasks: [Task] = exampleTasks
     @Published var selectedDate: Date = Date()
     @Published var selectedID: UUID? {
             didSet {
@@ -65,4 +65,49 @@ class AppViewModel: ObservableObject{
     private func index(for id: UUID) -> Int? {
         tasks.firstIndex(where: { $0.id == id })
     }
+}
+
+extension AppViewModel{
+    static let exampleTasks: [Task] = [
+            Task(title: "Eat breakfast",
+                 description: "Go and Eat Breakfast",
+                 startTime: .from("2025-11-17 7:30"),
+                 endTime: .from("2025-11-17 8:00")
+                ),
+            Task(title: "Go on Jog",
+                 description: "Jog around the Block",
+                 startTime: .from("2025-11-17 8:30"),
+                 endTime: .from("2025-11-17 9:30")
+                ),
+            Task(title: "Work on Project",
+                 description: "Develop my Million Dollar app",
+                 startTime: .from("2025-11-17 10:00"),
+                 endTime: .from("2025-11-17 17:00")
+                ),
+            Task(title: "Pick up Kids",
+                 description: "Don't forget to pick up the kids!",
+                 startTime: .from("2025-11-17 15:30"),
+                 endTime: .from("2025-11-17 15:45")
+                ),
+            Task(title: "Eat breakfast",
+                 description: "Go and Eat Breakfast",
+                 startTime: .from("2025-11-22 7:30"),
+                 endTime: .from("2025-11-22 8:00")
+                ),
+            Task(title: "Read a Book!",
+                 description: "I want to read a book",
+                 startTime: .from("2025-11-22 8:30"),
+                 endTime: .from("2025-11-22 11:30")
+                ),
+            Task(title: "Work on Project",
+                 description: "Develop my Million Dollar app",
+                 startTime: .from("2025-11-22 12:00"),
+                 endTime: .from("2025-11-22 19:00")
+                ),
+            Task(title: "Eat a Burger",
+                 description: "Forget the kids, Eat a burger!",
+                 startTime: .from("2025-11-22 15:30"),
+                 endTime: .from("2025-11-22 15:45")
+                )
+    ]
 }
